@@ -1,15 +1,11 @@
 import os
-from typing import Annotated, Optional
 from pprint import pprint
 # import PIL.Image
 from dotenv import load_dotenv
 import instructor
-from instructor.processing.multimodal import Image
-from pydantic import BaseModel, Field
+from instructor.processing.multimodal import Image, PDF
 
-
-# from google import genai
-from src.schemas.document_id import DocumentID
+from src.schemas.invoice import InvoiceLight
 
 load_dotenv()
 
@@ -31,29 +27,28 @@ client = instructor.from_provider(
 # Image.from_base64("base64_encoded_string_here")
 # Option 4: Autodetect
 # Image.autodetect(<url|path|base64>)
-img_dni_front = Image.from_path("data/dni_front.jpeg")
-img_dni_back = Image.from_path("data/dni.jpeg")
+invoice_image = Image.from_path("data/factura_horror.jpeg")
+# invoice_image2 = Image.from_path("data/factura_horror.jpeg")
+invoice_image2 = Image.from_path("data/fac3_2.jpeg")
+
+invoice_pdf = PDF.from_path("data/factura.pdf")
+
 print("Extrayendo datos de la parte frontal del documento de identidad...")
 
 
-response: DocumentID = client.create(
-    response_model=DocumentID,
+response: InvoiceLight = client.create(
+    response_model=InvoiceLight,
     safety_settings=[],  # TODO: Add safety settings only for gemini
     messages=[
         {
             "role": "system",
-            "content": """You are a helpful assistant that extracts information from identity documents in spanish.
-            Instructions:
-            - The format of the dates is DD MM YYYY.
-            - type_street you can find in the street field.
-            """,
+            "content": "You are a helpful assistant that extracts information from light invoices in spanish.",
         },
         {
             "role": "user",
             "content": [
-                img_dni_front,
-                img_dni_back,
-                "Analyze these two images of an identity document (front and back) and extract the requested structured information.",
+                invoice_pdf,
+                "Analyze these PDFs of an invoice and extract the requested structured information.",
             ],
         },
     ],

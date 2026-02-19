@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from pydantic import BaseModel, BeforeValidator, Field, field_validator
+from pydantic import BaseModel, BeforeValidator, Field
 from typing import Annotated, Optional
 
 
@@ -91,4 +91,5 @@ def parse_flexible_date(valor):
 
 
 # Tipo anotado para fechas flexibles
+# No uso
 FlexibleDate = Annotated[date, BeforeValidator(parse_flexible_date)]
