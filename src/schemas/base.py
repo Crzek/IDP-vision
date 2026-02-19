@@ -6,38 +6,40 @@ from typing import Annotated, Optional
 class PersonNameMixin(BaseModel):
     """Mixin para nombres de personas siguiendo el formato español"""
 
-    first_name: Optional[str] = Field(
-        default=None, description="First name of the person"
+    first_name: str = Field(
+        default=..., description="First name of the person"
     )
     second_name: Optional[str] = Field(
-        default=None, description="Second name of the person"
+        default=None, description="Second name of the person, you can find in 'nombre'"
     )
-    first_surname: Optional[str] = Field(
-        default=None, description="First surname of the person"
+    first_surname: str = Field(
+        default=..., description="First surname of the person"
     )
-    second_surname: Optional[str] = Field(
-        default=None, description="Second surname of the person"
+    second_surname: str = Field(
+        default=..., description="Second surname of the person"
     )
 
 
 class Address(BaseModel):
     """Dirección base reutilizable"""
 
-    street: Optional[str] = Field(default=None, description="The name of the street")
-    street_type: Optional[str] = Field(
-        default=None, description="The type of street in spanish, get from street"
+    street: str = Field(
+        default=..., description="The name of the street, only name street")
+    street_type: str = Field(
+        default=..., description="The type of street in spanish, get from street"
     )
-    street_number: Optional[str] = Field(
-        default=None, description="The number of the street"
+    street_number: str = Field(
+        default=..., description="The number of the street, get from street"
     )
-    city: Optional[str] = Field(default=None, description="The city")
-    province: Optional[str] = Field(default=None, description="The province")
+    city: str = Field(default=..., description="The city")
+    province: str = Field(default=..., description="The province")
 
 
 class AddressWithPostalCode(Address):
     """Dirección con código postal para casos que lo requieran"""
 
-    postal_code: Optional[str] = Field(default=None, description="The postal code")
+    postal_code: Optional[str] = Field(
+        default=None, description="The postal code")
 
 
 def parse_flexible_date(valor):
@@ -68,7 +70,8 @@ def parse_flexible_date(valor):
 
         for formato in formatos_aceptados:
             try:
-                fecha_parseada = datetime.strptime(valor.strip(), formato).date()
+                fecha_parseada = datetime.strptime(
+                    valor.strip(), formato).date()
 
                 # Validar que el año esté en un rango razonable
                 if fecha_parseada.year < 1900 or fecha_parseada.year > 2100:

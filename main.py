@@ -1,11 +1,12 @@
 import os
 from typing import Annotated, Optional
-
+from pprint import pprint
 # import PIL.Image
 from dotenv import load_dotenv
 import instructor
 from instructor.processing.multimodal import Image
 from pydantic import BaseModel, Field
+
 
 # from google import genai
 from src.schemas.document_id import DocumentID
@@ -65,7 +66,8 @@ print("GEMINI_API_KEY:", GEMINI_API_KEY)
 
 
 # 2. Configuramos el cliente (usando el modelo multimodal)
-client = instructor.from_provider("google/gemini-2.0-flash", api_key=GEMINI_API_KEY)
+client = instructor.from_provider(
+    "google/gemini-2.0-flash", api_key=GEMINI_API_KEY)
 
 # 3. Extraemos los datos enviando la imagen directamente
 # img_dni_back = PIL.Image.open("data/dni.jpeg")
@@ -83,7 +85,7 @@ img_dni_back = Image.from_path("data/dni.jpeg")
 print("Extrayendo datos de la parte frontal del documento de identidad...")
 
 
-response = client.create(
+response: DocumentID = client.create(
     response_model=DocumentID,
     safety_settings=[],  # TODO: Add safety settings only for gemini
     messages=[
@@ -93,7 +95,6 @@ response = client.create(
             Instructions:
             - The format of the dates is DD MM YYYY.
             - type_street you can find in the street field.
-            
             """,
         },
         {
@@ -116,7 +117,7 @@ response = client.create(
 )
 
 
-print(response)
+pprint(response.model_dump())
 # print(response.items)
 
 
