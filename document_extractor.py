@@ -1,3 +1,6 @@
+"""
+Clase propia para extracción de información de documentos usando Gemini.
+"""
 import os
 import json
 import base64
